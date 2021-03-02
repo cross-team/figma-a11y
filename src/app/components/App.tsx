@@ -1,38 +1,54 @@
 import * as React from 'react';
-import {Text} from 'react-figma-plugin-ds';
+import AddRole from './views/add-role';
 import '../styles/ui.css';
-import 'react-figma-plugin-ds/figma-plugin-ds.css';
 
 declare function require(path: string): any;
 
 const App = ({}) => {
-    React.useEffect(() => {
-        // This is how we read messages sent from the plugin controller
-        window.onmessage = event => {
-            const {type, message} = event.data.pluginMessage;
-            console.log(type, message);
-        };
-    }, []);
+    var [state, setState] = React.useState({
+        selected: [],
+        view: 'home',
+    });
 
-    // call launchControllerFunctions('message1') to launch the message1 command in src/plugin/controller.ts
-    function launchControllerFunctions(messageType) {
-        parent.postMessage({pluginMessage: {type: messageType}}, '*');
+    window.onmessage = event => {
+        setState({
+            ...state,
+            selected: event.data.pluginMessage,
+        });
+    };
+
+    React.useEffect(() => {
+        console.log(state);
+    }, [state]);
+
+    function handleAdd() {
+        console.log('triggered');
+        setState({
+            ...state,
+            view: 'add',
+        });
     }
 
-    return (
-        <div id="root">
-            <Text size="xlarge" weight="bold">
-                Welcome to your figma plugin!
-            </Text>
-            <Text size="large" weight="normal">
-                Check out{' '}
-                <a href="https://github.com/alexandrtovmach/react-figma-plugin-ds/" target="_blank" rel="noreferrer">
-                    react-figma-plugin-ds
-                </a>{' '}
-                on gitHub to learn about the available components!
-            </Text>
-        </div>
-    );
+    switch (state.view) {
+        case 'home':
+            return (
+                <div id="root">
+                    {state.selected.length === 0 ? (
+                        'Select a component to add a role to'
+                    ) : (
+                        <button onClick={handleAdd}>Add Role</button>
+                    )}
+                </div>
+            );
+        case 'add':
+            return (
+                <div id="root">
+                    <AddRole selected={state.selected} />
+                </div>
+            );
+        default:
+            return <div id="root">Error</div>;
+    }
 };
 
 export default App;

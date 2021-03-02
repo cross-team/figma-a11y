@@ -9,6 +9,7 @@
 		"prettier:format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,json}' "
 	},
 	"dependencies": {
+		"aria-query": "^4.2.2",
 		"react": "^16.13.1",
 		"react-dom": "^16.13.1",
 		"react-figma-plugin-ds": "^2.0.5"

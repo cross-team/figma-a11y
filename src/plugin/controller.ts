@@ -4,6 +4,11 @@ figma.showUI(__html__, {
 
 figma.loadFontAsync({family: 'Roboto', style: 'Regular'});
 
+figma.ui.postMessage(figma.currentPage.selection);
+figma.on('selectionchange', () => {
+    figma.ui.postMessage(figma.currentPage.selection);
+});
+
 figma.ui.onmessage = msg => {
     switch (msg.type) {
         case 'message1':
