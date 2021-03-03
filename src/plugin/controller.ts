@@ -9,16 +9,34 @@ figma.on('selectionchange', () => {
     figma.ui.postMessage(figma.currentPage.selection);
 });
 
+function createMetadata(state) {
+    console.log('debug_start');
+    let textNodes = [];
+    Object.keys(state).forEach(key => {
+        console.log('debug_loop_start');
+        let textNode = figma.createText();
+        console.log('debug_create_text');
+        textNode.characters = `aria-${key}: ${state[key].toString()}`;
+        textNode.name = `aria-${key}`;
+        textNodes.push(textNode);
+        console.log('debug_loop_end');
+    });
+    console.log('debug_after_start');
+    let group = figma.group(textNodes, figma.currentPage);
+    console.log('debug_create_group');
+    group.visible = false;
+    group.name = 'metaData';
+    return group;
+}
+
 figma.ui.onmessage = msg => {
     switch (msg.type) {
-        case 'message1':
-            //Enter your fimga API code here!!
-            break;
-        case 'message2':
-            //Enter your fimga API code here!!
-            break;
-        case 'message3':
-            //Enter your fimga API code here!!
+        case 'add':
+            let node = figma.getNodeById(msg.selected[0].id);
+            let metaData = createMetadata(msg.state);
+            if (node.type === 'COMPONENT' || node.type === 'INSTANCE' || node.type === 'GROUP') {
+                node.appendChild(metaData);
+            }
             break;
         default:
             break;

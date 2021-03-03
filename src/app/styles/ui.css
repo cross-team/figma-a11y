@@ -6,3 +6,13 @@
     height: 100%;
     padding: 3rem;
 }
+
+form.addRole {
+    display: flex;
+    flex-direction: column;
+}
+
+.inputWrapper {
+    display: flex;
+    justify-content: space-between;
+}
